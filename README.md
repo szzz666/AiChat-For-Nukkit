@@ -14,7 +14,7 @@
 #### 快速开始
 1. 将插件放置到plugins文件夹下
 2. 进入服务器
-3. 输入/aichat命令
+3. 输入`/aichat`命令
 4. 点击`修改插件配置`
 ![](img/PixPin_2024-06-23_00-20-58.png)
 5. 获取api_key(获取链接：https://github.com/chatanywhere/GPT_API_free)
