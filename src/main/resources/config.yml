@@ -1,0 +1,24 @@
+# 语言配置路径
+Language: "chs.yml"
+
+# 打开配置表单的命令
+OpenFormCmd: "aichat"
+
+# API地址
+api_url: "https://api.chatanywhere.tech/v1/chat/completions"
+
+# API密钥，用于身份验证，此处为空，实际使用时需要填写
+api_key: ""
+
+# 最大请求次数，限制与服务端的交互频率
+maxRequestNum: 5
+
+# prompt文本文件路径
+prompt: "prompt.txt"
+
+# 触发命令前缀列表，用于识别何时启动AI对话
+triggerPrefix:
+  - "星空酱"
+  - "帮帮我"
+  - "星酱"
+  - "s"
