@@ -43,7 +43,7 @@ public class Listeners implements Listener {
             isBroadcast++;
             new Thread(() -> BroadcastMessage(msg, player)).start();
         }else {
-            nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", requestExcessiveMsg));
+            new Thread(() -> BroadcastMessage(msg, player)).start();
         }
     }
 
