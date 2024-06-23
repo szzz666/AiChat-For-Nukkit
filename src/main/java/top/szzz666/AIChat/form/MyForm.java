@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import static top.szzz666.AIChat.config.LangConfig.*;
 import static top.szzz666.AIChat.config.MyConfig.*;
+import static top.szzz666.AIChat.tools.pluginUtil.StringArrToIntArr;
 
 
 public class MyForm {
@@ -45,6 +46,10 @@ public class MyForm {
         form.addElement(new ElementInput(Form0_Element5,
                 triggerPrefix.toString().replaceAll("\\[", "").replace("]", ""),
                 triggerPrefix.toString().replaceAll("\\[", "").replace("]", "")));
+        form.addElement(new ElementInput(Form0_Element6,
+                clientOutTime.toString().replaceAll("\\[", "").replace("]", ""),
+                clientOutTime.toString().replaceAll("\\[", "").replace("]", "")));
+
         // 设置提交操作
         form.addHandler(FormResponseHandler.withoutPlayer(ignored -> {
             if (form.wasClosed()) return;
@@ -54,6 +59,7 @@ public class MyForm {
             int maxRequestNum = Integer.parseInt(form.getResponse().getInputResponse(3));
             String prompt = form.getResponse().getInputResponse(4);
             ArrayList<String> triggerPrefix = new ArrayList<>(Arrays.asList(form.getResponse().getInputResponse(5).split(", ")));
+            ArrayList<Integer> clientOutTime = new ArrayList<>(Arrays.asList(StringArrToIntArr(form.getResponse().getInputResponse(6).split(", "))));
             // 处理用户提交的数据
             MyConfig.Language = Language;
             MyConfig.api_url = api_url;
@@ -61,6 +67,7 @@ public class MyForm {
             MyConfig.maxRequestNum = maxRequestNum;
             MyConfig.prompt = prompt;
             MyConfig.triggerPrefix = triggerPrefix;
+            MyConfig.clientOutTime = clientOutTime;
             saveConfig();
             loadLangConfig();
             player.sendMessage(Form0_sendMessage);

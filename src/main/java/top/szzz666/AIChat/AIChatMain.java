@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import static top.szzz666.AIChat.config.LangConfig.loadLangConfig;
 import static top.szzz666.AIChat.config.MyConfig.loadConfig;
+import static top.szzz666.AIChat.tools.pluginUtil.lineConsole;
 import static top.szzz666.AIChat.tools.pluginUtil.nkConsole;
 
 
@@ -32,7 +33,11 @@ public class AIChatMain extends PluginBase {
         ConfigPath = getDataFolder().getPath();
         loadConfig();
         loadLangConfig();
-        nkConsole("&b插件读取...");
+        lineConsole("   _   _  ___ _         _   \n" +
+                "  /_\\ (_)/ __| |_  __ _| |_ \n" +
+                " / _ \\| | (__| ' \\/ _` |  _|\n" +
+                "/_/ \\_\\_|\\___|_||_\\__,_|\\__|");
+        nkConsole("&bAiChat插件读取...");
     }
 
     @Override
@@ -41,14 +46,15 @@ public class AIChatMain extends PluginBase {
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
         //注册命令
         this.getServer().getCommandMap().register(this.getName(), new MyCommand());
-
-        nkConsole("&b插件开启");
+        nkConsole("&bAiChat插件开启");
+        nkConsole("&c如果遇到任何bug，请加入Q群进行反馈：894279534",2);
     }
 
     @Override
     public void onDisable(){
         //插件关闭
-        nkConsole("&b插件关闭");
+        nkConsole("&bAiChat插件关闭");
     }
+
 
 }

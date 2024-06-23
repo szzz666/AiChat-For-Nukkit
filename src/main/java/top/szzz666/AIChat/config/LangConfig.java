@@ -24,6 +24,7 @@ public class LangConfig {
     public static String Form0_Element3;
     public static String Form0_Element4;
     public static String Form0_Element5;
+    public static String Form0_Element6;
     public static String Form0_sendMessage;
 
     public static boolean loadLangConfig() {
@@ -46,6 +47,7 @@ public class LangConfig {
         Form0_Element3 = LangConfig.getString("Form0_Element3");
         Form0_Element4 = LangConfig.getString("Form0_Element4");
         Form0_Element5 = LangConfig.getString("Form0_Element5");
+        Form0_Element6 = LangConfig.getString("Form0_Element6");
         Form0_sendMessage = LangConfig.getString("Form0_sendMessage");
         LangConfig.save();
         return true;

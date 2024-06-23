@@ -1,6 +1,6 @@
 name: AIChat
 main: top.szzz666.AIChat.AIChatMain
-version: "1.0.0"
+version: "1.0.1"
 author: szzz666
 api: ["1.0.0"]
 description: AIChat plugin

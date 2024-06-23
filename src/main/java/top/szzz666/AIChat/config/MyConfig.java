@@ -14,6 +14,7 @@ public class MyConfig {
     public static String api_key;
     public static int maxRequestNum;
     public static String prompt;
+    public static ArrayList<Integer> clientOutTime = new ArrayList<>();
     public static ArrayList<String> triggerPrefix = new ArrayList<>();
 
     public static boolean loadConfig() {
@@ -29,6 +30,7 @@ public class MyConfig {
         maxRequestNum = config.getInt("maxRequestNum");
         prompt = config.getString("prompt");
         triggerPrefix = (ArrayList<String>) config.get("triggerPrefix");
+        clientOutTime = (ArrayList<Integer>) config.get("clientOutTime");
         config.save();
         return true;
     }
@@ -42,6 +44,7 @@ public class MyConfig {
         config.set("maxRequestNum", maxRequestNum);
         config.set("prompt", prompt);
         config.set("triggerPrefix", triggerPrefix);
+        config.set("clientOutTime", clientOutTime);
         config.save();
         return true;
     }
