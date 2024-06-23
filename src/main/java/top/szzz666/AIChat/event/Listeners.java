@@ -55,5 +55,4 @@ public class Listeners implements Listener {
         nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", sr));
         isBroadcast--;
     }
-
 }
