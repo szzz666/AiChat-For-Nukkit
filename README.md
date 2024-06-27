@@ -18,25 +18,33 @@
 4. 点击`修改插件配置`
 
 ![](img/PixPin_2024-06-23_00-20-58.png)
+
 5. 获取api_key(获取链接：https://github.com/chatanywhere/GPT_API_free)
+
 6. 点击`申请内测免费Key`(需要github账号)
 
 ![](img/img.png)
+
 7. 复制sk开头的这一串
 
 ![](img/img_1.png)
+
 8. 粘贴到`接口密钥`处
 
 ![](img/img_6.png)
+
 9. 滑到下面，点击提交(你也可以选择修改触发前缀)
 
 ![](img/img_3.png)
+
 10. 出现这个说明配置好了
 
 ![](img/img_4.png)
+
 11. 在聊天了发送带前缀的消息，就会触发AI聊天
 
 ![](img/img_5.png)
+
 #### 常见问题
 1. 当出现错误，控制台会显示错误码
 
