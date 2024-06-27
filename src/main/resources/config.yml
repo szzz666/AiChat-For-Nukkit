@@ -22,7 +22,6 @@ triggerPrefix:
   - "帮帮我"
   - "星酱"
   - "s"
-  -
 # 客户端请求超时时间（秒）
 clientOutTime:
   - 30 #连接超时时间

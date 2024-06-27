@@ -85,7 +85,7 @@ requestJson.json
 换用其他接口要注意修改`model`,其他配置不清楚就不要动
 ```json
 {
-  "messages": ["messages"],
+  "messages": [],
   "user": "%playerName%",
   "model": "gpt-3.5-turbo",
   "frequency_penalty": 0,

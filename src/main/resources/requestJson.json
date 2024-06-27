@@ -1,5 +1,5 @@
 {
-  "messages": ["messages"],
+  "messages": [],
   "user": "%playerName%",
   "model": "gpt-3.5-turbo",
   "frequency_penalty": 0,

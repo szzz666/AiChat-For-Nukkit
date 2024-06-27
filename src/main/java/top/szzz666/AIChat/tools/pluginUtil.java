@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import com.google.gson.*;
 import okhttp3.*;
+import top.szzz666.AIChat.entity.ChatRequest;
 import top.szzz666.AIChat.entity.Message;
 
 import java.io.BufferedReader;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.nimbusds.jose.util.IOUtils.readFileToString;
 import static top.szzz666.AIChat.AIChatMain.*;
 import static top.szzz666.AIChat.config.LangConfig.requestFailedMsg;
 import static top.szzz666.AIChat.config.MyConfig.*;
@@ -31,10 +33,9 @@ public class pluginUtil {
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String messagesJson = gson.toJson(playerChat.get(player));
+//        String messagesJson = gson.toJson(playerChat.get(player));
 //        nkConsole(messagesJson);
-        RequestBody body = RequestBody.create(mediaType, (readJsonFile(ConfigPath + "/requestJson.json")
-                .replaceAll("\\[\"messages\"]", messagesJson)));
+        RequestBody body = RequestBody.create(mediaType, initRequestJson(player));
         Request request = new Request.Builder()
                 .url(api_url)
                 .method("POST", body)
@@ -63,9 +64,17 @@ public class pluginUtil {
             return requestFailedMsg;
         }
     }
-
+    //生成请求json字符串
+    public static String initRequestJson(Player player) {
+        Gson gson = new Gson();
+        ChatRequest chatRequest = gson.fromJson(
+                readFileToString(ConfigPath + "/requestJson.json"),
+                ChatRequest.class);
+        chatRequest.setMessages(playerChat.get(player));
+        return chatRequest.toString();
+    }
     public static String getPrompt() {
-        return readJsonFile(ConfigPath + "/" + prompt);
+        return readFileToString(ConfigPath + "/" + prompt);
     }
 
     //添加消息
@@ -138,18 +147,19 @@ public class pluginUtil {
         }
     }
 
-    //读取json文件
-    public static String readJsonFile(String filePath) {
-        StringBuilder jsonContent = new StringBuilder();
+    //读取文件
+    public static String readFileToString(String filePath) {
+        StringBuilder content = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                jsonContent.append(line);
+                content.append(line);
+                content.append(System.lineSeparator());
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
-        return jsonContent.toString();
+        return content.toString();
     }
 
     public static Integer[] StringArrToIntArr(String[] stringArray) {

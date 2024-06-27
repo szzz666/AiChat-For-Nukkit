@@ -5,11 +5,13 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import top.szzz666.AIChat.entity.Message;
+
+import java.util.ArrayList;
 
 import static top.szzz666.AIChat.AIChatMain.nkServer;
 import static top.szzz666.AIChat.AIChatMain.playerChat;
-import static top.szzz666.AIChat.config.LangConfig.broadcastMsg;
-import static top.szzz666.AIChat.config.LangConfig.requestExcessiveMsg;
+import static top.szzz666.AIChat.config.LangConfig.*;
 import static top.szzz666.AIChat.config.MyConfig.maxRequestNum;
 import static top.szzz666.AIChat.config.MyConfig.triggerPrefix;
 import static top.szzz666.AIChat.tools.pluginUtil.*;
@@ -43,16 +45,31 @@ public class Listeners implements Listener {
             isBroadcast++;
             new Thread(() -> BroadcastMessage(msg, player)).start();
         }else {
-            new Thread(() -> BroadcastMessage(msg, player)).start();
+            new Thread(() -> nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", requestExcessiveMsg))).start();
         }
     }
 
     private void BroadcastMessage(String msg, Player player) {
-        String sendMsg = handleMsg(msg);
-        addPlayerChat(player, sendMsg);
+//        String sendMsg = handleMsg(msg);
+//        addPlayerChat(player, sendMsg);
+//        String sr = aiChat(player);
+//        addMessage("assistant", sr, player);
+//        nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", sr));
+        if (playerChat.get(player) == null) {
+            ArrayList<Message> sendAiMessages = new ArrayList<>();
+            playerChat.put(player, sendAiMessages);
+            addMessage("system", getPrompt(), player);
+            addMessage("user", handleMsg(msg), player);
+        } else {
+            addMessage("user", handleMsg(msg), player);
+        }
         String sr = aiChat(player);
+        isBroadcast--;
         addMessage("assistant", sr, player);
         nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", sr));
-        isBroadcast--;
+        if (sr.equals(requestFailedMsg)){
+            playerChat.remove(player);
+        }
+//        isBroadcast--;
     }
 }
