@@ -5,12 +5,13 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.scheduler.AsyncTask;
+import com.google.gson.Gson;
 import top.szzz666.AIChat.entity.Message;
 
 import java.util.ArrayList;
 
-import static top.szzz666.AIChat.AIChatMain.nkServer;
-import static top.szzz666.AIChat.AIChatMain.playerChat;
+import static top.szzz666.AIChat.AIChatMain.*;
 import static top.szzz666.AIChat.config.LangConfig.*;
 import static top.szzz666.AIChat.config.MyConfig.maxRequestNum;
 import static top.szzz666.AIChat.config.MyConfig.triggerPrefix;
@@ -41,12 +42,24 @@ public class Listeners implements Listener {
     private void ProcessMessages(PlayerChatEvent event, String msg, Player player) {
         // 先让消息发送出去
         event.setCancelled(false);
-        if (isBroadcast <= maxRequestNum) {
-            isBroadcast++;
-            new Thread(() -> BroadcastMessage(msg, player)).start();
-        }else {
-            new Thread(() -> nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", requestExcessiveMsg))).start();
-        }
+        nkServer.getScheduler().scheduleAsyncTask(plugin, new AsyncTask() {
+            @Override
+            public void onRun() {
+                if (isBroadcast <= maxRequestNum) {
+                    isBroadcast++;
+                    BroadcastMessage(msg, player);
+                }else {
+                    nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", requestExcessiveMsg));
+                }
+            }
+        });
+//        new Thread(() -> {/*d代码*/}).start();
+//        if (isBroadcast <= maxRequestNum) {
+//            isBroadcast++;
+//            new Thread(() -> BroadcastMessage(msg, player)).start();
+//        }else {
+//            new Thread(() -> nkServer.broadcastMessage(broadcastMsg.replaceAll("%msg%", requestExcessiveMsg))).start();
+//        }
     }
 
     private void BroadcastMessage(String msg, Player player) {
