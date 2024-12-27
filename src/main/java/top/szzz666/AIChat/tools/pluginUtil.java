@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import com.google.gson.*;
 import okhttp3.*;
-import top.szzz666.AIChat.entity.ChatRequest;
 import top.szzz666.AIChat.entity.Message;
 
 import java.io.BufferedReader;
@@ -17,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.nimbusds.jose.util.IOUtils.readFileToString;
 import static top.szzz666.AIChat.AIChatMain.*;
 import static top.szzz666.AIChat.config.LangConfig.requestFailedMsg;
 import static top.szzz666.AIChat.config.MyConfig.*;
@@ -32,10 +30,8 @@ public class pluginUtil {
                 .writeTimeout(clientOutTime.get(2), TimeUnit.SECONDS)    // 写入超时时间
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        String messagesJson = gson.toJson(playerChat.get(player));
-//        nkConsole(messagesJson);
-        RequestBody body = RequestBody.create(mediaType, initRequestJson(player));
+        String requestJson = initRequestJson(player);
+        RequestBody body = RequestBody.create(mediaType, requestJson);
         Request request = new Request.Builder()
                 .url(api_url)
                 .method("POST", body)
@@ -48,15 +44,13 @@ public class pluginUtil {
             //获取响应的json字符串
             strResponse = String.valueOf(response);
             jsonResponse = Objects.requireNonNull(response.body()).string();
-//            nkConsole(strResponse);
-//            nkConsole(jsonResponse);
         } catch (IOException e) {
             e.fillInStackTrace();
         }
         if (getCode(strResponse).equals("200")) {
             return getContent(jsonResponse);
         } else {
-            nkConsole("错误码：" + getCode(strResponse));
+            nkConsole("出现错误: \n" + requestJson + "\n" + strResponse);
             playerChat.remove(player);
             ArrayList<Message> messages = new ArrayList<>();
             playerChat.put(player, messages);
@@ -64,15 +58,15 @@ public class pluginUtil {
             return requestFailedMsg;
         }
     }
-    //生成请求json字符串
+
     public static String initRequestJson(Player player) {
-        Gson gson = new Gson();
-        ChatRequest chatRequest = gson.fromJson(
-                readFileToString(ConfigPath + "/requestJson.json"),
-                ChatRequest.class);
-        chatRequest.setMessages(playerChat.get(player));
-        return chatRequest.toString();
+        JsonObject jsonObject = new JsonParser().parse(readFileToString(ConfigPath + "/requestJson.json")).getAsJsonObject();
+        // 修改字段
+        jsonObject.add("messages", JsonParser.parseString(new Gson().toJson(playerChat.get(player))));
+        jsonObject.add("user", JsonParser.parseString(player.getName()));
+        return jsonObject.toString();
     }
+
     public static String getPrompt() {
         return readFileToString(ConfigPath + "/" + prompt);
     }
@@ -119,6 +113,12 @@ public class pluginUtil {
         }
         return msg1;
     }
+    public static String handleMsg(String msg,boolean deprefix) {
+        if(deprefix) {
+            return handleMsg(msg);
+        }
+        return msg;
+    }
 
 
     //前缀判断
@@ -154,13 +154,14 @@ public class pluginUtil {
             String line;
             while ((line = br.readLine()) != null) {
                 content.append(line);
-                content.append(System.lineSeparator());
+//                content.append(System.lineSeparator());
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return content.toString();
     }
+
 
     public static Integer[] StringArrToIntArr(String[] stringArray) {
         List<Integer> intList = new ArrayList<>();
@@ -197,8 +198,9 @@ public class pluginUtil {
             plugin.getLogger().info(TextFormat.colorize('&', msg));
         }
     }
-   //将输入的字符串按行打印到控制台。
-    public static void lineConsole(String s){
+
+    //将输入的字符串按行打印到控制台。
+    public static void lineConsole(String s) {
         String[] lines = s.split("\n");
         for (String line : lines) {
             nkConsole(line);

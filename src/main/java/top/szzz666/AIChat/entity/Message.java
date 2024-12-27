@@ -1,5 +1,7 @@
 package top.szzz666.AIChat.entity;
 
+import com.google.gson.Gson;
+
 public class Message {
     public String role;
     public String content;
@@ -45,6 +47,6 @@ public class Message {
     }
 
     public String toString() {
-        return "message{role = " + role + ", content = " + content + "}";
+        return new Gson().toJson(this);
     }
 }

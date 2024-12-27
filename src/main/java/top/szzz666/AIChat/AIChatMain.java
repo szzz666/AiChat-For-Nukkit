@@ -8,12 +8,14 @@ import cn.nukkit.plugin.PluginBase;
 import top.szzz666.AIChat.command.MyCommand;
 import top.szzz666.AIChat.entity.Message;
 import top.szzz666.AIChat.event.Listeners;
+import top.szzz666.AIChat.fast_text.FastText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static top.szzz666.AIChat.config.LangConfig.loadLangConfig;
 import static top.szzz666.AIChat.config.MyConfig.loadConfig;
+import static top.szzz666.AIChat.config.secData.loadSecData;
 import static top.szzz666.AIChat.tools.pluginUtil.lineConsole;
 import static top.szzz666.AIChat.tools.pluginUtil.nkConsole;
 
@@ -23,9 +25,11 @@ public class AIChatMain extends PluginBase {
     public static Server nkServer;
     public static CommandSender consoleObjects;
     public static String ConfigPath;
+    public static FastText fastText;
     public static HashMap<Player, ArrayList<Message>> playerChat = new HashMap<>();
+
     @Override
-    public void onLoad(){
+    public void onLoad() {
         //插件读取
         nkServer = getServer();
         plugin = this;
@@ -33,6 +37,8 @@ public class AIChatMain extends PluginBase {
         ConfigPath = getDataFolder().getPath();
         loadConfig();
         loadLangConfig();
+        loadSecData();
+//        fastText = new FastText();
         lineConsole("   _   _  ___ _         _   \n" +
                 "  /_\\ (_)/ __| |_  __ _| |_ \n" +
                 " / _ \\| | (__| ' \\/ _` |  _|\n" +
@@ -41,17 +47,17 @@ public class AIChatMain extends PluginBase {
     }
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         //注册监听器
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
         //注册命令
         this.getServer().getCommandMap().register(this.getName(), new MyCommand());
         nkConsole("&bAiChat插件开启");
-        nkConsole("&c如果遇到任何bug，请加入Q群进行反馈：894279534",2);
+        nkConsole("&c如果遇到任何bug，请加入Q群进行反馈：894279534", 2);
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         //插件关闭
         nkConsole("&bAiChat插件关闭");
     }

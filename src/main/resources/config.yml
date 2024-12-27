@@ -19,11 +19,14 @@ prompt: "prompt.txt"
 # 触发命令前缀列表，用于识别何时启动AI对话
 triggerPrefix:
   - "星空酱"
-  - "帮帮我"
-  - "星酱"
-  - "s"
 # 客户端请求超时时间（秒）
 clientOutTime:
   - 30 #连接超时时间
   - 30 #读取超时时间
   - 30 #写入超时时间
+autoCmd: false
+useFastText: false
+# FastText
+FastTextModelPath: "/lid.176.ftz"
+
+minScore: 0.94

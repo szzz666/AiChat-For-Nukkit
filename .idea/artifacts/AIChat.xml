@@ -1,12 +1,15 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="AIChat">
-    <output-path>$PROJECT_DIR$/server/plugins</output-path>
+    <output-path>$PROJECT_DIR$/../TestServer/plugins</output-path>
     <root id="archive" name="AIChat.jar">
       <element id="module-output" name="AIChat" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/squareup/okio/okio/3.2.0/okio-3.2.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.6.20/kotlin-stdlib-1.6.20.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/squareup/okio/okio-jvm/3.2.0/okio-jvm-3.2.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/squareup/okhttp3/okhttp/4.11.0/okhttp-4.11.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/vinhkhuc/JFastText/0.5/jfasttext-0.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bytedeco/javacpp/1.5.8/javacpp-1.5.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/huaban/jieba-analysis/1.0.2/jieba-analysis-1.0.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

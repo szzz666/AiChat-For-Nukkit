@@ -16,11 +16,14 @@ public class MyConfig {
     public static String prompt;
     public static ArrayList<Integer> clientOutTime = new ArrayList<>();
     public static ArrayList<String> triggerPrefix = new ArrayList<>();
+    public static String FastTextModelPath;
+    public static double minScore;
+    public static boolean autoCmd;
+    public static boolean useFastText;
 
     public static boolean loadConfig() {
         plugin.saveResource("config.yml");
         plugin.saveResource("requestJson.json");
-        plugin.saveResource("responseJson.json");
         plugin.saveResource("prompt.txt");
         Config config = new Config(ConfigPath + "/config.yml", Config.YAML);
         Language = config.getString("Language");
@@ -31,7 +34,10 @@ public class MyConfig {
         prompt = config.getString("prompt");
         triggerPrefix = (ArrayList<String>) config.get("triggerPrefix");
         clientOutTime = (ArrayList<Integer>) config.get("clientOutTime");
-        config.save();
+        FastTextModelPath = ConfigPath + config.getString("FastTextModelPath");
+        minScore = config.getDouble("minScore");
+        autoCmd = config.getBoolean("autoCmd", false);
+        useFastText = config.getBoolean("useFastText", false);
         return true;
     }
 

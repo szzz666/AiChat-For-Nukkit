@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "message": "Success",
+  "sid": "cha000c0a50@dx193ee741418b8f3532",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "无\n\n用户Requirements是{\"requirementsList\": [\"传送到World\",\"打开地皮菜单\",\"传送到Land\",\"传送到Nether\",\"打开领地菜单\",\"打开商店菜单\"]}"
+      },
+      "index": 0
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 105,
+    "completion_tokens": 42,
+    "total_tokens": 147
+  }
+}

@@ -26,6 +26,8 @@ public class LangConfig {
     public static String Form0_Element5;
     public static String Form0_Element6;
     public static String Form0_sendMessage;
+    public static String Sec_sendMessage;
+    public static String joinMsg;
 
     public static boolean loadLangConfig() {
         plugin.saveResource("language/chs.yml");
@@ -49,7 +51,8 @@ public class LangConfig {
         Form0_Element5 = LangConfig.getString("Form0_Element5");
         Form0_Element6 = LangConfig.getString("Form0_Element6");
         Form0_sendMessage = LangConfig.getString("Form0_sendMessage");
-        LangConfig.save();
+        Sec_sendMessage = LangConfig.getString("Sec_sendMessage");
+        joinMsg = LangConfig.getString("joinMsg");
         return true;
     }
 
