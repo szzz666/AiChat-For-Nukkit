@@ -1,0 +1,17 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "请匹配用户Requirements是{\"requirementsList\": %requirementsList%}中的哪一个Requirements，回答严格格式只回答对应Requirements，没有匹配到Requirements就回答null"
+    },
+    {
+      "role": "user",
+      "content": "%msg%"
+    }
+  ],
+  "user": "%playerName%",
+  "model": "gpt-3.5-turbo",
+  "max_tokens": 16,
+  "stream": false,
+  "temperature": 0.1
+}
