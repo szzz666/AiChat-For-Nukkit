@@ -12,13 +12,20 @@ api_key: ""
 
 # 最大请求次数，限制与服务端的交互频率
 maxRequestNum: 5
+# 最大上下文数
+maxContextNum: 30
+# 最大缓存数量
+maxCacheNum: 200
 
 # prompt文本文件路径
 prompt: "prompt.txt"
-
+# 重置聊天命令
+resetCommands: [ "重置", "重置对话" ]
 # 触发命令前缀列表，用于识别何时启动AI对话
 triggerPrefix:
   - "星空酱"
+# 模糊触发列表
+blurTriggerWords: [ "星空酱" ]
 # 客户端请求超时时间（秒）
 clientOutTime:
   - 30 #连接超时时间

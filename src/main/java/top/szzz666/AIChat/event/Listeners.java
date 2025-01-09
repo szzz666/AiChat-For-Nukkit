@@ -34,8 +34,8 @@ public class Listeners implements Listener {
     public void onPlayerChat(PlayerChatEvent event) {
         String msg = event.getMessage();
         Player player = event.getPlayer();
-        if (!triggerPrefix.isEmpty()) {
-            if (startsWiths(msg, triggerPrefix)) {
+        if (!triggerPrefix.isEmpty() && !blurTriggerWords.isEmpty()) {
+            if (isBtr(msg) || isTri(msg)) {
                 ProcessMessages(event, msg, player);
             }
         } else {
@@ -46,7 +46,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        playerChat.remove(player);
+        playerChat.remove(player.getName());
     }
 
     @EventHandler
@@ -65,10 +65,10 @@ public class Listeners implements Listener {
             @Override
             public void onRun() {
                 String cmd = null;
-                if (autoCmd){
-                    if (useFastText){
+                if (autoCmd) {
+                    if (useFastText) {
                         cmd = secUtil.getCmdBySec(msg);
-                    }else {
+                    } else {
                         cmd = secUtil.getCmdByAi(msg);
                     }
                 }
@@ -88,20 +88,30 @@ public class Listeners implements Listener {
     }
 
     private void BroadcastMessage(String msg, Player player) {
-        if (playerChat.get(player) == null) {
+        if (playerChat.get(player.getName()) == null) {
             ArrayList<Message> sendAiMessages = new ArrayList<>();
-            playerChat.put(player, sendAiMessages);
-            addMessage("system", getPrompt(), player);
-            addMessage("user", handleMsg(msg,false), player);
+            playerChat.put(player.getName(), sendAiMessages);
+            addMessage("system", getPrompt(), player.getName());
+            addMessage("user", handleMsg(msg, false), player.getName());
         } else {
-            addMessage("user", handleMsg(msg,false), player);
+            addMessage("user", handleMsg(msg, false), player.getName());
         }
-        String sr = aiChat(player);
+        if (resetCommands.contains(delSpace(msg))) {
+            playerChat.remove(player.getName());
+            nkServer.broadcastMessage(broadcastMsg.replace("%msg%", resetMsg));
+            return;
+        }
+        if (playerChat.get(player.getName()).size() > maxContextNum) {
+            playerChat.remove(player.getName());
+            nkServer.broadcastMessage(broadcastMsg.replace("%msg%", TooMuchContextMsg));
+            return;
+        }
+        String sr = aiChat(player.getName());
         isBroadcast--;
-        addMessage("assistant", sr, player);
+        addMessage("assistant", sr, player.getName());
         nkServer.broadcastMessage(broadcastMsg.replace("%msg%", sr));
         if (sr.equals(requestFailedMsg)) {
-            playerChat.remove(player);
+            playerChat.remove(player.getName());
         }
     }
 }

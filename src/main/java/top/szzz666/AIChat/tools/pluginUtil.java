@@ -1,15 +1,17 @@
 package top.szzz666.AIChat.tools;
 
-import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import okhttp3.*;
 import top.szzz666.AIChat.entity.Message;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +23,7 @@ import static top.szzz666.AIChat.config.LangConfig.requestFailedMsg;
 import static top.szzz666.AIChat.config.MyConfig.*;
 
 public class pluginUtil {
-    public static String aiChat(Player player) {
+    public static String aiChat(String username) {
         String jsonResponse = "";
         String strResponse = "";
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -30,7 +32,7 @@ public class pluginUtil {
                 .writeTimeout(clientOutTime.get(2), TimeUnit.SECONDS)    // 写入超时时间
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
-        String requestJson = initRequestJson(player);
+        String requestJson = initRequestJson(username);
         RequestBody body = RequestBody.create(mediaType, requestJson);
         Request request = new Request.Builder()
                 .url(api_url)
@@ -51,19 +53,28 @@ public class pluginUtil {
             return getContent(jsonResponse);
         } else {
             nkConsole("出现错误: \n" + requestJson + "\n" + strResponse);
-            playerChat.remove(player);
+            playerChat.remove(username);
             ArrayList<Message> messages = new ArrayList<>();
-            playerChat.put(player, messages);
-            addMessage("system", getPrompt(), player);
+            playerChat.put(username, messages);
+            addMessage("system", getPrompt(), username);
             return requestFailedMsg;
         }
     }
 
-    public static String initRequestJson(Player player) {
-        JsonObject jsonObject = new JsonParser().parse(readFileToString(ConfigPath + "/requestJson.json")).getAsJsonObject();
+    public static String initRequestJson(String username) {
+//        JsonObject jsonObject = new JsonParser().parse(readFileToString(ConfigPath + "/requestJson.json")).getAsJsonObject();
+        JsonObject jsonObject;
+        try {
+            FileReader fileReader = new FileReader(ConfigPath + "/requestJson.json");
+            JsonReader reader = new JsonReader(fileReader);
+            reader.setLenient(true); // 设置宽松模式
+            jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         // 修改字段
-        jsonObject.add("messages", JsonParser.parseString(new Gson().toJson(playerChat.get(player))));
-        jsonObject.add("user", JsonParser.parseString(player.getName()));
+        jsonObject.add("messages", JsonParser.parseString(new Gson().toJson(playerChat.get(username))));
+        jsonObject.add("user", JsonParser.parseString(username));
         return jsonObject.toString();
     }
 
@@ -72,22 +83,22 @@ public class pluginUtil {
     }
 
     //添加消息
-    public static void addMessage(String role, String content, Player player) {
+    public static void addMessage(String role, String content, String username) {
         Message message = new Message();
         message.setRole(role);
         message.setContent(content);
-        playerChat.get(player).add(message);
+        playerChat.get(username).add(message);
     }
 
     //添加玩家聊天
-    public static void addPlayerChat(Player player, String msg) {
-        if (playerChat.get(player) != null) {
-            addMessage("user", msg, player);
+    public static void addPlayerChat(String username, String msg) {
+        if (playerChat.get(username) != null) {
+            addMessage("user", msg, username);
         } else {
             ArrayList<Message> messages = new ArrayList<>();
-            playerChat.put(player, messages);
-            addMessage("system", getPrompt(), player);
-            addMessage("user", msg, player);
+            playerChat.put(username, messages);
+            addMessage("system", getPrompt(), username);
+            addMessage("user", msg, username);
         }
     }
 
@@ -113,8 +124,9 @@ public class pluginUtil {
         }
         return msg1;
     }
-    public static String handleMsg(String msg,boolean deprefix) {
-        if(deprefix) {
+
+    public static String handleMsg(String msg, boolean deprefix) {
+        if (deprefix) {
             return handleMsg(msg);
         }
         return msg;
@@ -122,14 +134,14 @@ public class pluginUtil {
 
 
     //前缀判断
-    public static boolean startsWiths(String str, ArrayList<String> prefixs) {
-        for (String prefix : prefixs) {
-            if (str.startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public static boolean startsWiths(String str, ArrayList<String> prefixs) {
+//        for (String prefix : prefixs) {
+//            if (str.startsWith(prefix)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     //解析json获得content
     public static String getContent(String strJson) {
@@ -157,7 +169,7 @@ public class pluginUtil {
 //                content.append(System.lineSeparator());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            nkConsole("错误：" + e, 2);
         }
         return content.toString();
     }
@@ -205,6 +217,26 @@ public class pluginUtil {
         for (String line : lines) {
             nkConsole(line);
         }
+    }
+    public static boolean isBtr(String text) {
+        for (String str : blurTriggerWords) {
+            if (text.contains(str)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isTri(String text) {
+        for (String str : triggerPrefix) {
+            if (text.startsWith(str)){
+                return true;
+            }
+        }
+        return false;
+    }
+    // 重置
+    public static String delSpace(String str) {
+       return str.replace(" ", "");
     }
 
 }
