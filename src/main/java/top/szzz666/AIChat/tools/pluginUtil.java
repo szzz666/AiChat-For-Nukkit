@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -218,25 +217,31 @@ public class pluginUtil {
             nkConsole(line);
         }
     }
+
     public static boolean isBtr(String text) {
         for (String str : blurTriggerWords) {
-            if (text.contains(str)){
+            if (text != null && text.contains(str)) {
                 return true;
             }
         }
         return false;
     }
+
     public static boolean isTri(String text) {
         for (String str : triggerPrefix) {
-            if (text.startsWith(str)){
+            if (text != null && text.startsWith(str)) {
                 return true;
             }
         }
         return false;
     }
+
     // 重置
     public static String delSpace(String str) {
-       return str.replace(" ", "");
+        if (str == null){
+            return "";
+        }
+        return str.replace(" ", "");
     }
 
 }
